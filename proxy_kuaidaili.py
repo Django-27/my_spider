@@ -1,9 +1,10 @@
 # -*- coding=utf-8 -*-
 import requests
 from lxml import html
+import threading
 import execjs
 import re
-
+from multiprocessing.dummy import Pool as ThreadPool
 
 def exception_decorator(func):  # 可以这样用，但是这样的变相异常处理，范围太大
     def decorate(*args, **kwargs):
@@ -64,29 +65,45 @@ class GetFreeProxy(object):
                 # 还有：匿名度、类型、get/post支持、位置、响应速度、最后验证时间
                 self.proxies.append(str_ip + ':' + str_port)
 
-        # 完成ip地址de规范和有效性验证
-        verify_regex = r"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}:\d{1,5}"
-        for tmp in self.proxies:
-            if re.findall(verify_regex, tmp):
 
-                proxies = {
-                    'http': 'http://' + tmp,
-                    'https': 'http://' + tmp
-                }
-                headers = {
-                    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_3) AppleWebKit/537.36 (KHTML, like Gecko)'
-                }
-                try:
-                    r = requests.get('http://www.qq.com', proxies=proxies, headers=headers)
-                    # self.checked_proies.append(tmp)
-                except Exception as e:
-                    print('代理有问题:', tmp, e)
+def verify_proxy(proxy):
+    # 完成ip地址de规范和有效性验证
+    verify_regex = r"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}:\d{1,5}"
 
+    if re.findall(verify_regex, proxy):
 
+        proxies = {
+            'http': 'http://' + proxy,
+            'https': 'http://' + proxy
+        }
+        headers = {
+              'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_3) AppleWebKit/537.36 (KHTML, like Gecko)'
+        }
+        try:
+            r = requests.get('http://www.jd.com', proxies=proxies, headers=headers)
+            # self.checked_proies.append(tmp)
+            print('no problem', proxy, r.status_code)
+        except Exception as e:
+            print('代理有问题:', proxy, e)
 
 
 if __name__ == '__main__':
     gg = GetFreeProxy()
     gg.free_proxy_kuaidaili()
-    print('中找到:', len(gg.proxies))
-    print('格式检查和可用检查', len(gg.checked_proies))
+    # gg.free_proxy_kuaidaili_selenium()
+    print(gg.proxies)
+    print('共找到:', len(gg.proxies))
+
+    # threads = []
+    # for proxy in gg.proxies:
+    #     t = threading.Thread(target=verify_proxy, args=(proxy,))
+    #     t.setDaemon(True)
+    #     threads.append(t)
+    #     t.start()
+    # for t in threads:
+    #     t.join()
+
+    pool = ThreadPool(15)
+    pool.map(verify_proxy, gg.proxies)
+    pool.close()
+    pool.join()
