@@ -62,10 +62,10 @@ DOWNLOAD_DELAY = 1
 #    'scrapy.extensions.telnet.TelnetConsole': None,
 #}
 
-SCHEDULER = "scrapy_redis.scheduler.Scheduler"               # 调度
-DUPEFILTER_CLASS = "scrapy_redis.dupefilter.RFPDuperFilter"  # 去重
-SCHEDULER_PERSIST = True                                     # 不清理Redis队列
-SCHEDULER_QUEUE_CLASS = "scrapy_redis.queue.SpiderQueue"     # 请求调度算法，队列
+# SCHEDULER = "scrapy_redis.scheduler.Scheduler"               # 调度
+# DUPEFILTER_CLASS = "scrapy_redis.dupefilter.RFPDuperFilter"  # 去重
+# SCHEDULER_PERSIST = True                                     # 不清理Redis队列
+# SCHEDULER_QUEUE_CLASS = "scrapy_redis.queue.SpiderQueue"     # 请求调度算法，队列
 
 # Configure item pipelines
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
