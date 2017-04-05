@@ -12,7 +12,8 @@ class DangdangSpider(scrapy.Spider):
 
     redis_key = 'dangdangspider:urls'
     allowed_domains = ['dangdang.com']
-    start_urls = 'http://category.dangdang.com/cp01.25.00.00.00.00.html'
+    start_urls = 'http://category.dangdang.com/cp01.00.00.00.00.00.html' # # 大种类, 共53个
+
 
     def start_requests(self):
         ua = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.22 Safari/537.36 SE 2.X MetaSr 1.0'
@@ -26,7 +27,7 @@ class DangdangSpider(scrapy.Spider):
         for goods in goodslist:
             try:
                 goods = html.fromstring(goods)
-                category_big_name = goods.xpath('a/@title')[0]  # 大种类
+                category_big_name = goods.xpath('a/@title')[0]  # 大种类, 共53个
                 category_big_url = goods.xpath('./a/@href')[0]
                 yield scrapy.Request(url=response.urljoin(category_big_url),
                                      headers=headers, callback=self.detail_parse,
@@ -43,7 +44,7 @@ class DangdangSpider(scrapy.Spider):
             try:
                 goods = html.fromstring(goods)
                 category_small_name = goods.xpath('a/@title')[0]
-                category_small_url = goods.xpath('a/@href')[0]
+                category_small_url = goods.xpath('a/@href')[0]   # 小种类，不确定
                 yield scrapy.Request(url=response.urljoin(category_small_url),
                                      callback=self.third_parse,
                                      meta={"category_small_name": category_small_name,
@@ -57,7 +58,7 @@ class DangdangSpider(scrapy.Spider):
         '''
         item = DangdangItem()
         for _ in range(3):
-            books = response.xpath('//div[@class="con shoplist"]/ul/li')  # 一页60项
+            books = response.xpath('//div[@class="con shoplist"]/ul/li')  # 正常一页60项
             for book in books:
                 book_price_cn = book.css('p.price span.price_n::text').extract_first()
                 book_author = book.css('p.author a::text').extract_first()
