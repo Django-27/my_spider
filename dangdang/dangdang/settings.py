@@ -60,12 +60,12 @@ DOWNLOAD_DELAY = 1
 # See http://scrapy.readthedocs.org/en/latest/topics/extensions.html
 #EXTENSIONS = {
 #    'scrapy.extensions.telnet.TelnetConsole': None,
-#}
-
-# SCHEDULER = "scrapy_redis.scheduler.Scheduler"               # 调度
-# DUPEFILTER_CLASS = "scrapy_redis.dupefilter.RFPDuperFilter"  # 去重
-# SCHEDULER_PERSIST = True                                     # 不清理Redis队列
-# SCHEDULER_QUEUE_CLASS = "scrapy_redis.queue.SpiderQueue"     # 请求调度算法，队列
+# #}
+#
+SCHEDULER = "scrapy_redis.scheduler.Scheduler"               # 调度
+DUPEFILTER_CLASS = "scrapy_redis.dupefilter.RFPDupeFilter"   # 去重
+SCHEDULER_PERSIST = True                                   # 不清理Redis队列
+SCHEDULER_QUEUE_CLASS = "scrapy_redis.queue.SpiderQueue"     # 请求调度算法，队列
 
 # Configure item pipelines
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
@@ -95,6 +95,6 @@ ITEM_PIPELINES = {
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
 
 MONGODB_HOST = '127.0.0.1'
-MONGODB_PORT = 27017
+MONGODB_PORT = 27018
 MONGODB_DBNAME = "dangdang"
 MONGODB_DOCNAME  = "saveinto_2"
