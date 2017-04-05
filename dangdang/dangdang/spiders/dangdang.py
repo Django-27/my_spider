@@ -55,17 +55,21 @@ class DangdangSpider(scrapy.Spider):
         '''
         http://category.dangdang.com/cp01.47.02.00.00.00.html#ddclick?act=clickcat&pos=0_0_0_p&cat=01.47.00.00.00.00&key=&qinfo=&pinfo=1021302_1_60&minfo=&ninfo=&custid=&permid=&ref=&rcount=&type=&t=1491375720000&sell_run=0&searchapi_version=eb_split'
         '''
+        item = DangdangItem()
         for _ in range(3):
-            books = response.xpath('//div[@class="con shoplist"]/ul/li').extract()
+            books = response.xpath('//div[@class="con shoplist"]/ul/li')  # 一页60项
             for book in books:
-                book = html.fromstring(book)
-                price_cn = book.xpath('//span[@class="price_n"]/text()')[0]
-                book_name = book.xpath('//p[@class="name"]/a/@title')[0]
-                book_author = book.xpath('//p[@class="author"]/a/text()')[0]
+                book_price_cn = book.css('p.price span.price_n::text').extract_first()
+                book_author = book.css('p.author a::text').extract_first()
+                book_name = book.css('p.name a::text').extract_first()
 
-                print(response.meta['category_big_name'],
-                      response.meta['category_small_name'],
-                      book_author, price_cn, book_name)
+                # print(response.meta['category_big_name'], response.meta['category_small_name'], book_author, book_price_cn, book_name)
+                item['book_price_cn'] = book_price_cn
+                item['book_name'] = book_name
+                item['book_author'] = book_author
+                item['category_big_name'] = response.meta['category_big_name']
+                item['category_small_name'] = response.meta['category_small_name']
+                yield item
 
             next_page = response.css('li.next a::attr(href)').extract_first()
             if next_page is not None:
