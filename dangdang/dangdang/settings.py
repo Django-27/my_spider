@@ -21,6 +21,8 @@ NEWSPIDER_MODULE = 'dangdang.spiders'
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = False
 
+DEPTH_LIMIT = 5
+
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #CONCURRENT_REQUESTS = 32
 
