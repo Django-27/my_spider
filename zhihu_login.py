@@ -40,7 +40,7 @@ def login(phone_num, password):
 
 
 if __name__ == '__main__':
-    login('18614035475', '147850096')
+    login('', '')
 
 
 

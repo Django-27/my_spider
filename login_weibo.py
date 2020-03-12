@@ -146,4 +146,4 @@ if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG, format="%(asctime)s\t%(levelname)s\t%(message)s")
     weibo = WeiBoLogin()
     #  weibo.login("username", "password")
-    weibo.login('18614035475', '147850096')
+    weibo.login('', '')
